@@ -1,16 +1,16 @@
 version: '3'
 services:
   web:
-    build: web
+    build: docker/web
     image: cakephp_sample_web
     container_name: cakephp_sample_web
     ports:
     - 8080:80
     volumes:
-    - ..:/var/www/app
+    - .:/var/www/app
   php_cli:
-    build: php_cli
+    build: docker/php_cli
     image: cakephp_sample_php_cli
     volumes:
-    - ..:/var/www/app
+    - .:/var/www/app
     working_dir: /var/www/app
