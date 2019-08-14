@@ -4,6 +4,8 @@ RUN apk add --no-cache \
   php5-phar \
   php5-json \
   php5-openssl \
-  php5-intl
+  php5-intl \
+  php5-xml \
+  php5-pdo_mysql
 RUN ln -s /usr/bin/php5 /usr/bin/php
 ENTRYPOINT [ "php" ]

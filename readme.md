@@ -3,8 +3,8 @@
 ## docker-compose up
 docker-compose up -d --build
 
-## docker exec
-docker exec -it cakephp_sample_web sh
+## docker-compose exec
+docker-compose exec web sh
 
 ## docker-compose run
 
@@ -18,8 +18,7 @@ curl -s https://getcomposer.org/installer | docker-compose run --rm php_cli
 
 ## cakephp3.0.xのインストール
 
-docker-compose run --rm php_cli composer.phar 
-create-project --prefer-dist "cakephp/app:3.0.*" app
+docker-compose run --rm php_cli composer.phar create-project --prefer-dist "cakephp/app:3.0.*" app
 mv app/* app/.[^\.]* .
 rmdir app
 
