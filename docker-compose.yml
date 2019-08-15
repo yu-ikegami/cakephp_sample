@@ -1,5 +1,13 @@
 version: '3'
 services:
+  db:
+    image: mysql:5.7
+    container_name: cakephp_sample_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: my_app
+      MYSQL_USER: my_app
+      MYSQL_PASSWORD: secret  
   web:
     build: docker/web
     image: cakephp_sample_web
@@ -8,6 +16,8 @@ services:
     - 8080:80
     volumes:
     - .:/var/www/app
+    depends_on:
+    - db
   php_cli:
     build: docker/php_cli
     image: cakephp_sample_php_cli

@@ -6,9 +6,13 @@ docker-compose up -d --build
 ## docker-compose exec
 docker-compose exec web sh
 
+docker-compose exec db bash
+
 ## docker-compose run
 
 docker-compose run --rm php_cli
+
+
 
 # メモ
 
