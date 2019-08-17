@@ -26,16 +26,12 @@ docker-compose run --rm php_cli composer.phar create-project --prefer-dist "cake
 mv app/* app/.[^\.]* .
 rmdir app
 
-docker-compose run --rm php_cli composer.phar install
-docker-compose run --rm php_cli composer.phar require --no-update cakephp/cakephp ~3.0.0
-docker-compose run --rm php_cli composer.phar require --dev --no-update cakephp/debug_kit ~3.1.0
-docker-compose run --rm php_cli composer.phar require --dev --no-update cakephp/bake ~1.0.0
-docker-compose run --rm php_cli composer.phar require --no-update cakephp/migrations ~1.3.0
+docker-compose run --rm php_cli php composer.phar require --no-update cakephp/cakephp ~3.0.0
 
 rm -rf vendor
 rm composer.lock
 
-docker-compose run --rm php_cli composer.phar install
+docker-compose run --rm php_cli php composer.phar install
 
 
 ===
