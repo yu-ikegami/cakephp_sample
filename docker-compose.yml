@@ -1,16 +1,13 @@
 version: '3'
 services:
   db:
-    build: docker/db
+    build: docker/mysql5.7
     image: cakephp_sample_db
     container_name: cakephp_sample_db
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: my_app
-      MYSQL_USER: my_app
-      MYSQL_PASSWORD: secret  
+    ports:
+      - 3306:3306
   web:
-    build: docker/web
+    build: docker/apache_php5.6
     image: cakephp_sample_web
     container_name: cakephp_sample_web
     ports:
@@ -20,7 +17,7 @@ services:
     depends_on:
     - db
   php_cli:
-    build: docker/php_cli
+    build: docker/php5.6
     image: cakephp_sample_php_cli
     volumes:
     - .:/var/www/app
