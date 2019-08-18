@@ -9,6 +9,7 @@ class ArticlesController extends AppController
         parent::initialize();
 
         $this->loadComponent('Paginator');
+        $this->Auth->allow(['tags']);
     }
 
     public function index()
@@ -29,7 +30,7 @@ class ArticlesController extends AppController
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->data());
 
-            $article->user_id = 1;
+            $article->user_id = $this->Auth->user('id');
 
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Your article has saved.'));
@@ -46,7 +47,9 @@ class ArticlesController extends AppController
     {
         $article = $this->Articles->findBySlug($slug)->contain('Tags')->firstOrFail();
         if ($this->request->is(['post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->data());
+            $article = $this->Articles->patchEntity($article, $this->request->data(), [
+                'accessibleFields' => ['user_id' => false],
+            ]);
 
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Your article has updated.'));
@@ -79,5 +82,22 @@ class ArticlesController extends AppController
         ]);
 
         $this->set(compact('tags', 'articles'));
+    }
+
+    public function isAuthorized($user)
+    {
+        $action = $this->request->param('action');
+        if (in_array($action, ['add', 'tags'])) {
+            return true;
+        }
+
+        $slug = $this->request->param('pass.0');
+        if (!$slug) {
+            return false;
+        }
+
+        $article = $this->Articles->findBySlug($slug)->first();
+
+        return $article->user_id === $user['id'];
     }
 }

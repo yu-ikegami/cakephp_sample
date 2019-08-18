@@ -38,5 +38,30 @@ class AppController extends Controller
     {
         parent::initialize();
         $this->loadComponent('Flash');
+
+        $this->loadComponent('Auth', [
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ]
+                ]
+            ],
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            // コントローラーで isAuthorized を使用します
+            'authorize' => ['Controller'],
+            // 未認証の場合、直前のページに戻します
+            'unauthorizedRedirect' => $this->referer()
+        ]);
+        $this->Auth->allow(['display', 'view', 'index']);
+    }
+
+    public function isAuthorized($user)
+    {
+        return false;
     }
 }
