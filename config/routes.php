@@ -49,9 +49,10 @@ Router::scope(
     }
 );
 
-Router::scope('/', function ($routes) {
-    $routes->extensions(['json']);
+Router::prefix('api', function ($routes) {
+  //  $routes->extensions(['json']);
     $routes->resources('Recipes');
+    $routes->resources('Login');
 });
 
 Router::scope('/', function ($routes) {
