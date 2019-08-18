@@ -111,6 +111,11 @@ return [
             'serialize' => true,
             'duration' => '+2 minutes',
         ],
+
+        'session' => [
+            'className' => 'Memcached',
+            'servers' => ['db'],
+        ],
     ],
 
     /**
@@ -322,6 +327,9 @@ return [
      * To use database sessions, load the SQL file located at config/Schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'php',
+        'defaults' => 'cache',
+        'handler' => [
+            'config' => 'session',
+        ],
     ],
 ];

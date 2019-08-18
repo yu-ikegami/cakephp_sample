@@ -50,6 +50,11 @@ Router::scope(
 );
 
 Router::scope('/', function ($routes) {
+    $routes->extensions(['json']);
+    $routes->resources('Recipes');
+});
+
+Router::scope('/', function ($routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
