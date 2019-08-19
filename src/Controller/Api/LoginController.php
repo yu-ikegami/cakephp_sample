@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Network\Exception\BadRequestException;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 
 class LoginController extends ApiController
@@ -22,7 +23,6 @@ class LoginController extends ApiController
                 ]
             ],
             'loginAction' => '/api/login',
-            'unauthorizedRedirect' => false,
         ]);
     }
 
@@ -31,11 +31,12 @@ class LoginController extends ApiController
         $user = $this->Auth->identify();
 
         if ($user) {
-            $user['api_key_plain'] = Text::uuid();
+            $accessToken = $this->newAccessToken();
 
-            // TODO トークンを Bcrypt で暗号化したものをDBに保存
-            $hasher = new DefaultPasswordHasher();
-            $user['api_key'] = $hasher->hash($user['api_key_plain']);
+            $this->saveAccessToken($user['id'], $accessToken);
+
+            // TODO レスポンスをちゃんと考える
+            $user['access_token'] = $accessToken;
 
             $this->set([
                 'user' => $user,
@@ -46,5 +47,21 @@ class LoginController extends ApiController
         }
 
         throw new BadRequestException('Invalid email or password');
+    }
+
+    private function newAccessToken()
+    {
+        return Text::uuid();
+    }
+
+    private function saveAccessToken($userId, $plain)
+    {
+        $accessTokensTable = TableRegistry::get('AccessTokens');
+
+        $accessToken = $accessTokensTable->newEntity();
+        $accessToken->access_token = $plain;
+        $accessToken->user_id = $userId;
+
+        $accessTokensTable->save($accessToken);
     }
 }

@@ -1,19 +1,18 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\User;
+use App\Model\Entity\AccessToken;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Users Model
+ * AccessTokensTable Model
  *
- * @property \Cake\ORM\Association\HasMany $AccessTokens
- * @property \Cake\ORM\Association\HasMany $Articles
+ * @property \Cake\ORM\Association\BelongsTo $Users
  */
-class UsersTable extends Table
+class AccessTokensTable extends Table
 {
 
     /**
@@ -26,17 +25,15 @@ class UsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('users');
+        $this->table('access_tokens');
         $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('AccessTokens', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Articles', [
-            'foreignKey' => 'user_id'
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -53,13 +50,8 @@ class UsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->add('email', 'valid', ['rule' => 'email'])
-            ->requirePresence('email', 'create')
-            ->notEmpty('email');
-
-        $validator
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+            ->requirePresence('access_token', 'create')
+            ->notEmpty('access_token');
 
         return $validator;
     }
@@ -73,7 +65,7 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
 }

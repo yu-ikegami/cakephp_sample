@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller\Api;
 
-class RecipesController extends ApiController
+class RecipesController extends AuthApiController
 {
     public function index()
     {
